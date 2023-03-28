@@ -1,0 +1,11 @@
+###register
+POST  http://localhost:3000/auth/register
+
+Content-Type: application/json
+{
+    "username":"",
+    "email":"",
+    "mobile":"",
+    "password":"",
+    "confirmPassword":""
+}
