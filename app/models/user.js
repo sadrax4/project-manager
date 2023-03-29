@@ -8,7 +8,8 @@ const userSchema = mongoose.Schema({
     email: { type: String, require: true, unique: true },
     password: { type: String, require: true, },
     skills: { type: [String], default: [] },
-    teams: { type: [mongoose.Types.ObjectId], default: [] }
+    teams: { type: [mongoose.Types.ObjectId], default: [] },
+    token: {type : String , default : ""}
 }, {
     Timestamps: true
 });

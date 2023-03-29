@@ -22,8 +22,8 @@ function registerValidator() {
             }),
         body("mobile").isMobilePhone("fa-IR").withMessage("شماره موبایل وارد شده صحیح نمیباشد")
             .custom(async mobile => {
-                const mobileExist = await UserModel.findOne({mobile});
-                if(mobileExist) throw "شماره موبایل وارد شده تکراری میباشد";
+                const mobileExist = await UserModel.findOne({ mobile });
+                if (mobileExist) throw "شماره موبایل وارد شده تکراری میباشد";
             }),
         body("password").custom((value, ctx) => {
             if (!value) throw "رمز عبور نمیتواند خالی باشد";
@@ -32,6 +32,22 @@ function registerValidator() {
         })
     ]
 }
+function loginValidator() {
+    return [
+        body("username").notEmpty().withMessage("نام کاربری نمیتواند خالی باشد")
+            .custom(async username => {
+                if (username) {
+                    const usernameRegex = /[a-z]+[a-z0-9\_\.]{3,}/gi
+                    if (usernameRegex.test(username)) {
+                        return true;
+                    }
+                    throw "نام کاربری صحیح نمیباشد"
+                }
+            }),
+        body("password").isLength({ min: 6, max: 16 }).withMessage("رمز عبوذ حداقل باید ۶ و حداکثر ۱۶ نویسه باشد")
+    ]
+}
 module.exports = {
-    registerValidator
+    registerValidator,
+    loginValidator
 }
