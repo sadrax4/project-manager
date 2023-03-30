@@ -7,8 +7,8 @@ const {userRoutes} = require('./user.js')
 
 router.use("/project",projectRoutes);
 router.use("/auth",authRoutes);
-router.use("/teamRouter",teamRoutes);
-router.use("/userRouter",userRoutes);
+router.use("/team",teamRoutes);
+router.use("/user",userRoutes);
 module.exports = {
     allRoutes: router
 }

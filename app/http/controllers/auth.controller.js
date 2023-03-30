@@ -24,10 +24,10 @@ class AuthController {
       if (!user) throw { status: 401, success: false, message: "نام کاربری یا رمز عبور اشتباه میباشد" };
       const compareResult = bcrypt.compareSync(password, user.password);
       if (!compareResult) throw { status: 401, success: false, message: "نام کاربری یا رمز عبور اشتباه میباشد" };
-      const token = tokenGenerator({username});
+      const token = tokenGenerator({ username });
       user.token = token;
       user.save();
-      return res.status(200).json({
+      return res.status(200).setHeader("autorization", `${token}`).json({
         status: 200,
         success: true,
         message: "شما با موفقیت وارد شدید",
