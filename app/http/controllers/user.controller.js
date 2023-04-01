@@ -3,7 +3,8 @@ const { UserModel } = require("../../models/user");
 class UserController {
     getProfile(req, res, next) {
         try {
-            const user = req.user;
+            let user = req.user;
+            user.profile_image = req.protocol + "://"+ req.get('host') +"/"+ user.profile_image;
             return res.status(200).json({
                 status: 200,
                 success: true,
@@ -34,6 +35,24 @@ class UserController {
                 })
             }
             throw { status: 400, success: false, message: "به روز رسانی انجام نشد" };
+        } catch (error) {
+            next(error);
+        }
+    }
+    async uploadProfileImage(req, res, next) {
+        try {
+            const userID = req.user?._id;
+            if (Object.keys(req.file).length == 0) throw {
+                status: 400, success: false, message: "یک تصویر انتخاب کنید"
+            };
+            const filePath = req.file?.path.split("public/")[1];
+            const result = await UserModel.updateOne({ _id: userID }, { $set: { profile_image: filePath } });
+            if (result.modifiedCount == 0) throw {
+                status: 400, success: false, message: "به روز رسانی انجام نشد"
+            };
+            return res.status(200).json({
+                status: 200, success: true, message: "به روز رسانی با موفقیت انجام شد"
+            })
         } catch (error) {
             next(error);
         }
