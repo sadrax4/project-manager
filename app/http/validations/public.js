@@ -1,8 +1,8 @@
-const { param } = require("express-validator");
+const {  check } = require("express-validator");
 
 function mongoIDValidator() {
     return [
-        param("id").isMongoId().withMessage("ایدی وارد شده صحیح نمیباشد")
+        check("id").isMongoId().withMessage("ایدی وارد شده صحیح نمیباشد")
     ]
 }
 module.exports = {

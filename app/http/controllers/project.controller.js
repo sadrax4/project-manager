@@ -1,16 +1,16 @@
+const autoBind = require("auto-bind");
 const { ProjectModel } = require("../../models/project");
 
 class ProjectController {
+    constructor(){
+        autoBind(this)
+    }
     async findProject(owner, projectID) {
-        try {
-            const project = await ProjectModel.find({ owner, _id: projectID });
-            if (!project) throw {
-                status: 404, success: false, message: "پروژه ای یافت نشد"
-            };
-            return project;
-        } catch (error) {
-            next(error);
-        }
+        const project = await ProjectModel.find({ owner, _id: projectID });
+        if (!project) throw {
+            status: 404, success: false, message: "پروژه ای یافت نشد"
+        };
+        return project;
     }
     async createProject(req, res, next) {
         try {
@@ -27,16 +27,20 @@ class ProjectController {
         }
     }
     async getAllProject(req, res, next) {
-        const userID = req.user._id;
-        const projects = await ProjectModel.findById({ _id: userID });
-        if (!projects) throw {
-            status: 400, success: false, message: "متاسفانه پروژه ای یافت نشد"
-        };
-        return res.status(200).json({
-            status: 200,
-            success: true,
-            projects
-        })
+        try {
+            const userID = req.user._id;
+            const projects = await ProjectModel.find({ owner: userID });
+            if (!projects) throw {
+                status: 400, success: false, message: "متاسفانه پروژه ای یافت نشد"
+            };
+            return res.status(200).json({
+                status: 200,
+                success: true,
+                projects
+            })
+        } catch (error) {
+            next(error);
+        }
     }
     async getProjectById(req, res, next) {
         try {
@@ -48,8 +52,7 @@ class ProjectController {
                 success: true,
                 project
             })
-        }
-        catch (error) {
+        } catch (error) {
             next(error);
         }
     }
