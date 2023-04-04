@@ -1,8 +1,8 @@
 const autoBind = require("auto-bind");
 const { ProjectModel } = require("../../models/project");
-
+const { createLinkForFile } = require("../../modules/functions")
 class ProjectController {
-    constructor(){
+    constructor() {
         autoBind(this)
     }
     async findProject(owner, projectID) {
@@ -74,13 +74,53 @@ class ProjectController {
             next(error);
         }
     }
+    async updateProject(req, res, next) {
+        try {
+            const projectID = req.params.id || undefined;
+            const owner = req.user._id || undefined;
+            const data = { ...req.body };
+            await this.findProject(owner, projectID);
+            Object.entries(data).forEach(([key, value]) => {
+                if (!["text", "title", "tags"].includes(key)) delete data[key];
+                if (["", " ", NaN, undefined, null, 0, -1].includes(value)) delete data[key];
+            });
+            const updateProjectResult = await ProjectModel.updateOne({ _id: projectID }, { $set: data });
+            if (updateProjectResult.modifiedCount == 0) throw {
+                status: 400, success: false, message: "به روز رسانی انجام نشد !"
+            }
+            return res.status(200).json({
+                status: 200,
+                success: true,
+                message: "به روز رسانی با موفقیت انجام شد"
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
+    async updateProjectImage(req, res, next) {
+        try {
+            let image = req.body.image;
+            image = createLinkForFile(image,req);
+            const owner = req.user._id;
+            const projectID = req.params.id;
+            await this.findProject(owner, projectID);
+            const updateResult = await ProjectModel.updateOne({ _id: projectID }, { $set: { image } });
+            if (updateResult.modifiedCount == 0) throw {
+                status: 400, success: false, message: "به روز رسانی انجام نشد !"
+            }
+            return res.status(200).json({
+                status: 200,
+                success: true,
+                message: "به روز رسانی با موفقیت انجام شد"
+            })
+        } catch (error) {
+            next(error);
+        }
+    }
     getAllProjectOfTeam() {
 
     }
     getProjectOfUser() {
-
-    }
-    updateProject() {
 
     }
 }

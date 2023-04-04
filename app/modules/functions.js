@@ -24,7 +24,9 @@ function createUploadPath() {
     fs.mkdirSync(uploadPath, { recursive: true });
     return path.join("public", "uploads", year, month, day);
 }
-
+function createLinkForFile(fileAddress,req) {
+    return req.protocol + "://" + req.get("host") + "/" + fileAddress;
+}
 module.exports = {
     hashingPassword,
     tokenGenerator,
