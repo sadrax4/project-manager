@@ -5,7 +5,8 @@ const ProjectSchema = mongoose.Schema({
     image: { type: String, default: "/defaults/defualt.png" },
     owner: { type: mongoose.Types.ObjectId, required: true },
     team: { type: [mongoose.Types.ObjectId] },
-    private: { type: Boolean, default: true }
+    private: { type: Boolean, default: true },
+    tags: { type: [String], defulat: [] }
 }, {
     Timestamps: true
 });
