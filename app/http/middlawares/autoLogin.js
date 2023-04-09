@@ -18,4 +18,4 @@ const checkLogin = async (req, res, next) => {
         next(error);
     }
 }
- module.exports = checkLogin;
+module.exports = checkLogin;

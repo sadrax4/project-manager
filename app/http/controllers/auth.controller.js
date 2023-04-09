@@ -16,7 +16,6 @@ class AuthController {
       next(error)
     }
   }
-
   async login(req, res, next) {
     try {
       const { username, password } = req.body;
@@ -37,9 +36,7 @@ class AuthController {
       next(error);
     }
   }
-
   resetpassword() {
-
   }
 
 }
